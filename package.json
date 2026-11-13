@@ -1,0 +1,52 @@
+{
+  "name": "prybrano",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.30.3",
+  "description": "Prybrano — reusable cleaning-service booking template (Nuxt 4 + TresJS + PostgreSQL)",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "node .output/server/index.mjs",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck",
+    "test": "vitest run",
+    "icons": "node scripts/make-icons.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "export:models": "vitest run --config vitest.export.config.ts"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "0.5.16",
+    "@pinia/nuxt": "1.0.3",
+    "@tresjs/cientos": "5.11.0",
+    "@tresjs/core": "5.11.0",
+    "nuxt": "4.6.4",
+    "pinia": "4.1.0",
+    "postgres": "4.1.1",
+    "sharp": "0.35.5",
+    "three": "0.187.0",
+    "vue": "3.5.45",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "@types/three": "0.187.0",
+    "@vue/language-plugin-pug": "3.3.14",
+    "pug": "3.0.4",
+    "sass-embedded": "1.108.2",
+    "typescript": "6.0.3",
+    "vitest": "5.1.0",
+    "vue-tsc": "3.3.14"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "@parcel/watcher"
+    ]
+  }
+}

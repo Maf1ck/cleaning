@@ -1,0 +1,102 @@
+// Theme palettes. This is the only place with literal colour values.
+// Light is the default; dark applies via [data-theme='dark'] or system preference
+// when the visitor has not picked a theme ([data-theme='system']).
+@use 'sass:map';
+
+$accents: (
+  'pine': ('light': #1e6b52, 'light-soft': #dcebe3, 'light-ink': #ffffff, 'dark': #6ccba2, 'dark-soft': #1c3a2f, 'dark-ink': #0b1a13),
+  'lagoon': ('light': #1d5f86, 'light-soft': #dae8f1, 'light-ink': #ffffff, 'dark': #7dbce6, 'dark-soft': #19324a, 'dark-ink': #08141f),
+  'plum': ('light': #6e3f7c, 'light-soft': #ede1f1, 'light-ink': #ffffff, 'dark': #cda6dc, 'dark-soft': #352441, 'dark-ink': #1a0f20),
+  'terracotta': ('light': #a3462a, 'light-soft': #f4e1d9, 'light-ink': #ffffff, 'dark': #f0a487, 'dark-soft': #43251a, 'dark-ink': #1e0d06),
+);
+
+@mixin light-palette {
+  --c-bg: #f5f3ee;
+  --c-surface: #ffffff;
+  --c-surface-2: #ece9e1;
+  --c-ink: #17231f;
+  --c-ink-2: #46544e;
+  --c-ink-3: #5f6b65;
+  --c-line: #dad6cc;
+  --c-sun: #f2b33d;
+  --c-sun-soft: #fbefd2;
+  --c-danger: #b3261e;
+  --c-danger-soft: #f9e3e1;
+  --c-success: #1e6b3a;
+  --c-focus: #2b6fd6;
+  --c-overlay: rgb(16 21 19 / 0.45);
+  --c-on-overlay: #ffffff;
+  --shadow-1: 0 1px 2px rgb(23 35 31 / 0.06), 0 4px 16px rgb(23 35 31 / 0.06);
+  --shadow-2: 0 2px 6px rgb(23 35 31 / 0.08), 0 18px 48px rgb(23 35 31 / 0.12);
+  --scene-ground: #e6e2d8;
+  color-scheme: light;
+}
+
+@mixin dark-palette {
+  --c-bg: #101513;
+  --c-surface: #18201c;
+  --c-surface-2: #212a26;
+  --c-ink: #e9efeb;
+  --c-ink-2: #b4beb9;
+  --c-ink-3: #8f9b95;
+  --c-line: #2f3934;
+  --c-sun: #f5c25e;
+  --c-sun-soft: #3a311d;
+  --c-danger: #ff8a80;
+  --c-danger-soft: #3d1f1d;
+  --c-success: #7fd49a;
+  --c-focus: #8ab4ff;
+  --c-overlay: rgb(0 0 0 / 0.6);
+  --c-on-overlay: #ffffff;
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 16px rgb(0 0 0 / 0.25);
+  --shadow-2: 0 2px 6px rgb(0 0 0 / 0.4), 0 18px 48px rgb(0 0 0 / 0.45);
+  --scene-ground: #1d2622;
+  color-scheme: dark;
+}
+
+@mixin accent-palette($mode) {
+  @each $name, $map in $accents {
+    &[data-accent='#{$name}'] {
+      --c-accent: #{map.get($map, $mode)};
+      --c-accent-soft: #{map.get($map, '#{$mode}-soft')};
+      --c-accent-ink: #{map.get($map, '#{$mode}-ink')};
+    }
+  }
+}
+
+// Swatches for the accent picker in the cabinet.
+@each $name, $map in $accents {
+  .accent-dot[data-accent='#{$name}'] {
+    background: map.get($map, 'light');
+  }
+
+  :root[data-theme='dark'] .accent-dot[data-accent='#{$name}'] {
+    background: map.get($map, 'dark');
+  }
+}
+
+:root {
+  @include light-palette;
+  --c-accent: #1e6b52;
+  --c-accent-soft: #dcebe3;
+  --c-accent-ink: #ffffff;
+  @include accent-palette(light);
+}
+
+:root[data-theme='dark'] {
+  @include dark-palette;
+  --c-accent: #6ccba2;
+  --c-accent-soft: #1c3a2f;
+  --c-accent-ink: #0b1a13;
+  @include accent-palette(dark);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme='system'] {
+    @include dark-palette;
+    --c-accent: #6ccba2;
+    --c-accent-soft: #1c3a2f;
+    --c-accent-ink: #0b1a13;
+    @include accent-palette(dark);
+  }
+}

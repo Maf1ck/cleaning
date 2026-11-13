@@ -21,7 +21,7 @@
         option(value="30d") 30 днів
 
   p.orders__error(v-if="error" role="alert") {{ error }}
-  p.muted(v-else-if="!loading && list.length === 0") {{ q || status !== 'all' || period !== 'all' ? 'Нічого не знайдено за цими фільтрами.' : 'Заявок поки немає. Нові зʼявляться тут.' }}
+  p.muted(v-else-if="!loading && list.length === 0") {{ totalOrders === 0 ? 'Заявок поки немає. Нові зʼявляться тут.' : 'Нічого не знайдено за цими фільтрами.' }}
 
   ul.list
     li(v-for="o in list" :key="o.id")
@@ -69,6 +69,8 @@ const counts = ref<Record<string, number>>({})
 const hasMore = ref(false)
 const loading = ref(false)
 const error = ref('')
+
+const totalOrders = computed(() => Object.values(counts.value).reduce((sum, n) => sum + n, 0))
 
 const statusFilters = computed(() => [
   ...ORDER_STATUSES.map((s) => ({ value: s as StatusFilter, label: STATUS_LABELS[s], count: counts.value[s] ?? 0 })),

@@ -68,17 +68,35 @@ async function connect(): Promise<Db> {
     const sql = postgres(url, { max: 5, idle_timeout: 20, prepare: false, onnotice: () => {} })
     db = wrapPostgres(sql)
   } else {
-    if (process.env.NODE_ENV === 'production' && process.env.ALLOW_EMBEDDED_DB !== '1') {
-      throw new Error('DATABASE_URL is not set. Configure PostgreSQL for production (see docs/DEPLOY.md).')
-    }
     const { PGlite } = await import('@electric-sql/pglite')
-    const dir = resolve(process.cwd(), '.data/pglite')
+    const dir = resolve(dataDir(), 'pglite')
     mkdirSync(dir, { recursive: true })
+    if (process.env.VERCEL) {
+      console.warn('[db] DATABASE_URL is not set: using embedded PGlite in /tmp. Data is lost on every cold start.')
+    }
     const client = await PGlite.create(dir)
     db = wrapPglite(client, client)
   }
   await migrate(db)
   return db
+}
+
+/**
+ * Folder for the embedded database and the generated secret (like the confectioner
+ * template's SQLite file): DATA_DIR, otherwise .data/ next to the app, or /tmp on
+ * Vercel, where only /tmp is writable and it does not survive a cold start.
+ */
+export function dataDir(): string {
+  if (process.env.DATA_DIR) return resolve(process.env.DATA_DIR)
+  if (process.env.VERCEL) return '/tmp/prybrano'
+  return resolve(process.cwd(), '.data')
+}
+
+export type StorageKind = 'postgres' | 'embedded' | 'embedded-temporary'
+
+export function storageKind(): StorageKind {
+  if (useRuntimeConfig().databaseUrl || process.env.DATABASE_URL) return 'postgres'
+  return process.env.VERCEL && !process.env.DATA_DIR ? 'embedded-temporary' : 'embedded'
 }
 
 const globalKey = Symbol.for('prybrano.db')

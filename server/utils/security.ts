@@ -25,10 +25,8 @@ export function serverSecret(): string {
     cachedSecret = configured
     return configured
   }
-  if (process.env.NODE_ENV === 'production' && process.env.ALLOW_EMBEDDED_DB !== '1') {
-    throw new Error('NUXT_SECRET is not set')
-  }
-  const dir = resolve(process.cwd(), '.data')
+  // No NUXT_SECRET: generate one once and keep it next to the embedded database.
+  const dir = dataDir()
   const file = resolve(dir, 'secret')
   mkdirSync(dir, { recursive: true })
   if (!existsSync(file)) writeFileSync(file, randomToken(32))

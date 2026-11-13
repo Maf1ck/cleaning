@@ -18,6 +18,10 @@
         :aria-current="route.path.startsWith(t.to) ? 'page' : undefined"
       ) {{ t.label }}
   main.admin__main
+    p.admin__warn(v-if="auth.storage === 'embedded-temporary'" role="alert")
+      strong Дані тимчасові.
+      |  Сайт працює на Vercel без постійної бази: заявки, фото й налаштування зникнуть під час перезапуску функції.
+      |  Підключіть PostgreSQL (змінна DATABASE_URL) або розгорніть на VPS — див. docs/DEPLOY.md.
     slot
   ToastHost
 </template>
@@ -26,6 +30,7 @@
 const settings = useSettings()
 const company = computed(() => settings.value.company)
 const route = useRoute()
+const auth = useAdminAuth().state
 
 const tabs = [
   { to: '/admin/orders', label: 'Заявки' },
@@ -133,6 +138,15 @@ useSeoMeta({ robots: 'noindex, nofollow' })
     max-width: $container;
     margin: 0 auto;
     padding: $sp-5 $sp-4 $sp-8;
+  }
+
+  &__warn {
+    margin-bottom: $sp-4;
+    padding: $sp-3 $sp-4;
+    border: $border solid $c-danger;
+    border-radius: $r-md;
+    background: $c-danger-soft;
+    font-size: $fs-sm;
   }
 }
 </style>

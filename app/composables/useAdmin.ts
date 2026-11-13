@@ -8,19 +8,29 @@ export function adminErrorMessage(e: unknown, fallback = 'Не вдалося в
   return err?.data?.message ?? fallback
 }
 
+export type StorageKind = 'postgres' | 'embedded' | 'embedded-temporary'
+
+interface AdminAuthState {
+  checked: boolean
+  authenticated: boolean
+  configured: boolean
+  storage: StorageKind
+}
+
 export function useAdminAuth() {
-  const state = useState<{ checked: boolean; authenticated: boolean; configured: boolean }>('admin-auth', () => ({
+  const state = useState<AdminAuthState>('admin-auth', () => ({
     checked: false,
     authenticated: false,
     configured: true,
+    storage: 'embedded',
   }))
 
   async function check(): Promise<boolean> {
     try {
-      const me = await $fetch<{ authenticated: boolean; configured: boolean }>('/api/admin/me')
+      const me = await $fetch<Omit<AdminAuthState, 'checked'>>('/api/admin/me')
       state.value = { checked: true, ...me }
     } catch {
-      state.value = { checked: true, authenticated: false, configured: true }
+      state.value = { ...state.value, checked: true, authenticated: false }
     }
     return state.value.authenticated
   }

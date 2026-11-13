@@ -1,6 +1,6 @@
 /* Service worker: caches only public static assets and the offline page.
  * Never caches /api, /admin, /order, /cart or /checkout (private or personal data). */
-const VERSION = 'prybrano-v1'
+const VERSION = 'prybrano-v2'
 const STATIC_CACHE = `${VERSION}-static`
 const OFFLINE_URL = '/offline.html'
 const PRECACHE = [OFFLINE_URL, '/icons/icon.svg', '/icons/icon-192.png', '/manifest.webmanifest']

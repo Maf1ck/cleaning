@@ -1,14 +1,34 @@
 <template lang="pug">
-svg.logo-mark(viewBox="0 0 32 32" aria-hidden="true" focusable="false")
-  path(d="M16 3c4.6 5.4 9 10.3 9 15.4A9 9 0 0 1 7 18.4C7 13.3 11.4 8.4 16 3Z" fill="currentColor")
-  path(d="M12.2 19.2c.4 2.3 2 3.8 4.3 4.1" stroke="var(--c-surface)" stroke-width="2" stroke-linecap="round" fill="none")
-  circle(cx="25.5" cy="7" r="2.2" fill="var(--c-sun)")
+svg.logo-mark(viewBox="0 0 512 512" aria-hidden="true" focusable="false")
+  rect(width="512" height="512" rx="128" class="logo-mark__tile")
+  path(d="M256 92c62 73 122 139 122 208a122 122 0 0 1-244 0c0-69 60-135 122-208Z" class="logo-mark__drop")
+  path(d="M205 312c6 31 27 52 58 56" class="logo-mark__shine")
+  path(d="M392 84l12 32 32 12-32 12-12 32-12-32-32-12 32-12Z" class="logo-mark__spark")
 </template>
 
 <style lang="scss" scoped>
 .logo-mark {
-  width: 28px;
-  height: 28px;
-  color: $c-accent;
+  flex: none;
+  width: 34px;
+  height: 34px;
+
+  &__tile {
+    fill: $c-accent;
+  }
+
+  &__drop {
+    fill: $c-accent-ink;
+  }
+
+  &__shine {
+    fill: none;
+    stroke: $c-accent;
+    stroke-width: 24;
+    stroke-linecap: round;
+  }
+
+  &__spark {
+    fill: $c-sun;
+  }
 }
 </style>
